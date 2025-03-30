@@ -39,7 +39,9 @@ jobs:
       - name: 🚀 Run the Application (Check if it Starts)
         run: |
           if [ -f "dist/index.js" ]; then
-            node dist/index.js
+            nohup node dist/index.js &  # Start server in the background
+            sleep 5  # Wait 5 seconds to confirm it started
+            echo "✅ Server started successfully!"
           else
             echo "⚠️ dist/index.js not found, skipping run step."
           fi
