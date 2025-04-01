@@ -24,7 +24,7 @@ app.get("/privacy", async (req, res) => {
     res.sendFile(path.resolve("src/public/pages/privacy/index.html"));
 });
 
-const PORT = process.env.PORT || 3000;  // Default to 3000 if not set
+const PORT = process.env.PORT || 5000;  // Default to 3000 if not set
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
