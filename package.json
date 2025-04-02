@@ -6,6 +6,7 @@
     "node-fetch": "^2.7.0",
     "path": "^0.12.7",
     "pgn-parser": "^2.2.0"
+    "prom-client": "^14.0.1"
   },
   "scripts": {
     "start": "tsc && nodemon dist/index.js",
