@@ -26,14 +26,9 @@ jobs:
         run: |
           rm -rf node_modules package-lock.json
           npm install
-
+      
       - name: 📦 Install Dependencies (Ensure All Packages are Installed)
         run: npm ci
-
-      - name: 📦 Install prom-client and TypeScript Types
-        run: |
-          npm install prom-client
-          npm install --save-dev @types/prom-client
 
       - name: 🏗️ Build the Project
         run: npm run build
@@ -45,7 +40,7 @@ jobs:
           else
             echo "⚠️ No test file found, skipping tests."
           fi
-
+      
       - name: 🚀 Run the Application (Check if it Starts)
         run: |
           if [ -f "dist/index.js" ]; then
