@@ -30,6 +30,9 @@ jobs:
       - name: 📦 Install Dependencies (Ensure All Packages are Installed)
         run: npm ci
 
+      - name: 📦 Ensure prom-client is Installed
+        run: npm install prom-client
+
       - name: 🏗️ Build the Project
         run: npm run build
 
