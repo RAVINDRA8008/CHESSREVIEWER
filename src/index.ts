@@ -72,7 +72,7 @@ app.use((req, res, next) => {
             .labels(req.method, req.route?.path || req.path)
             .observe(requestSize);
 
-        console.log(`📊 [METRICS] ${req.method} ${req.path} - ${res.statusCode} - ${durationInSeconds.toFixed(3)}s`);
+       
     });
 
     next();
