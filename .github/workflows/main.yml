@@ -20,10 +20,20 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: "npm" # Speeds up installs by caching dependencies
+          cache: "npm"
 
-      - name: 📦 Install Dependencies
-        run: npm ci # Faster and more reliable than "npm install"
+      - name: 🧹 Clean Install Dependencies
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
+
+      - name: 📦 Install Dependencies (Ensure All Packages are Installed)
+        run: npm ci
+
+      - name: 📦 Install prom-client and TypeScript Types
+        run: |
+          npm install prom-client
+          npm install --save-dev @types/prom-client
 
       - name: 🏗️ Build the Project
         run: npm run build
@@ -39,8 +49,8 @@ jobs:
       - name: 🚀 Run the Application (Check if it Starts)
         run: |
           if [ -f "dist/index.js" ]; then
-            nohup node dist/index.js &  # Start server in the background
-            sleep 5  # Wait 5 seconds to confirm it started
+            nohup node dist/index.js &
+            sleep 5
             echo "✅ Server started successfully!"
           else
             echo "⚠️ dist/index.js not found, skipping run step."
