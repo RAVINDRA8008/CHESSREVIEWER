@@ -1,6 +1,6 @@
-# WintrCat's Game Report
+# RAVINDRA's Game Report
 
-Generate classifications for your Chess moves, for free. Available @ [chess.wintrcat.uk](https://chess.wintrcat.uk/)
+Generate classifications for your Chess moves, for free.
 <br><br>
 Enter a game by its PGN or pick a game from your Chess.com / Lichess.org account and have it analysed so that you can see where your mistakes and brilliancies are.
 
@@ -45,19 +45,136 @@ Freechess is currently closed to further contributions - we are working on rebui
 - Run `sudo docker run -d -P freechess`
 - If you wish to choose the port instead of Docker choosing one for you, replace `-P` with `-p <port>:80`
 
-## Attributions
-@shirsakm - Classification icons
+# Deploying a Node.js Application on AWS EC2
 
-## Donate
-I pay to keep my app running and free-to-use for everyone. Any donations are greatly appreciated ❤️
-<br><br>
-<a href="https://ko-fi.com/N4N7SORCC">
-    <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi1.png?v=3"/>
-</a>
+This guide walks you through deploying a Node.js application on an **Amazon Linux 2023 EC2 instance**.
 
-## Join the community
-If you've found a bug in the website, have some cool suggestions or just want to have a chat, you can join my Discord!
-<br>
-<a href="https://discord.com/invite/XxtsAzPyCb">
-    <img height="36" src="https://chess.wintrcat.uk/static/media/discord.png">
-</a>
+---
+
+## 🚀 Prerequisites
+
+- AWS account with an EC2 instance running **Amazon Linux 2023**
+- SSH access to the EC2 instance
+- GitHub repository of your Node.js project
+- Security group allowing **port 22 (SSH) and 5000 (app)**
+
+---
+
+## 🔗 Step 1: Connect to Your EC2 Instance
+
+Use SSH to access your EC2 instance:
+
+```bash
+ssh -i "C:\Users\ravin\Downloads\CHESS.pem" ec2-user@your-ec2-ip
+```
+
+---
+
+## 🛠️ Step 2: Update the System & Install Dependencies
+
+```bash
+sudo yum update -y
+sudo yum install -y git
+```
+
+---
+
+## 🏗️ Step 3: Install Node.js
+
+```bash
+curl -sL https://rpm.nodesource.com/setup_18.x | sudo bash -
+sudo yum install -y nodejs
+```
+
+Verify the installation:
+
+```bash
+node -v
+npm -v
+```
+
+---
+
+## 📥 Step 4: Clone Your GitHub Repository
+
+Replace `<your-repo>` with your actual repository URL:
+
+```bash
+git clone https://github.com/RAVINDRA8008/CHESSREVIEWER.git
+cd CHESSREVIEWER
+```
+
+---
+
+## 📦 Step 5: Install Project Dependencies
+
+```bash
+npm install
+```
+
+---
+
+## 🔧 Step 6: Build the Project
+
+```bash
+npm run build
+```
+
+---
+
+## 🚀 Step 7: Start the Application
+
+```bash
+npm start
+```
+
+Your application should now be running! 🎉
+
+---
+
+## 🎯 Step 8: Allow Traffic to Your EC2 Instance
+
+1. Go to **AWS Console** → **EC2** → **Security Groups**
+2. Edit the **Inbound Rules**
+3. Allow **port 5000** for incoming traffic
+4. Save the changes
+
+Now, access your application using `http://your-ec2-ip:5000`.
+
+---
+
+## 📌 Step 9: Running the App in the Background
+
+Use **PM2** to keep the app running:
+
+```bash
+npm install -g pm2
+npm start &
+```
+
+Or start it with PM2:
+
+```bash
+npm install -g pm2
+npm start
+pm2 start dist/index.js --name "CHESSREVIEWER"
+pm2 save
+
+```
+
+---
+
+## 🎉 Success!
+
+Your Node.js application is now running on an AWS EC2 instance. 🚀
+
+---
+
+
+
+Happy coding! ✨
+
+
+
+
+
