@@ -1,12 +1,29 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import path from "path";
 import dotenv from "dotenv";
 import client from "prom-client"; // Prometheus client
+import winston from "winston";
+import { LogstashTransport } from 'winston-logstash-transport';
+
 
 dotenv.config();
 import apiRouter from "./api";
 
 const app = express();
+
+// 🔹 Logstash Logger Setup
+const logstashHost = process.env.LOGSTASH_HOST || "127.0.0.1";
+const logstashPort = parseInt(process.env.LOGSTASH_PORT || "5000");
+
+const logger = winston.createLogger({
+    transports: [
+        new winston.transports.Console(),
+        new LogstashTransport({
+            host: logstashHost,
+            port: logstashPort,
+        }),
+    ],
+});
 
 // 🔹 Prometheus Metrics Setup
 const collectDefaultMetrics = client.collectDefaultMetrics;
@@ -53,6 +70,12 @@ const cpuUsageGauge = new client.Gauge({
     help: "CPU usage percentage",
 });
 
+// 🔹 Request Logging Middleware
+app.use((req: Request, res: Response, next: NextFunction) => {
+    
+    next();
+});
+
 // Middleware to track request durations and count requests
 app.use((req, res, next) => {
     const start = process.hrtime();
@@ -72,7 +95,7 @@ app.use((req, res, next) => {
             .labels(req.method, req.route?.path || req.path)
             .observe(requestSize);
 
-        console.log(`📊 [METRICS] ${req.method} ${req.path} - ${res.statusCode} - ${durationInSeconds.toFixed(3)}s`);
+        
     });
 
     next();
@@ -105,8 +128,8 @@ app.get("/metrics", async (req, res) => {
         const metrics = await client.register.metrics();
         res.send(metrics);
     } catch (err) {
-        const error = err as Error; // Fix for TypeScript unknown type
-        console.error("🚨 Error generating metrics:", error.message);
+        const error = err as Error;
+        logger.error("🚨 Error generating metrics:", { message: error.message });
         res.status(500).send(`Error generating metrics: ${error.message}`);
     }
 });
@@ -130,7 +153,14 @@ app.get("/privacy", (req, res) => {
     res.sendFile(path.resolve("src/public/pages/privacy/index.html"));
 });
 
+// 🔹 Global Error Handler
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+    logger.error("❌ Internal Server Error", { message: err.message });
+    res.status(500).send("Internal Server Error");
+});
+
+// 🚀 Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
+    logger.info(`🚀 Server running on port ${PORT}`);
 });
